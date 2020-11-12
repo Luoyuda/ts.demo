@@ -2,7 +2,7 @@
  * @Author: xiaohuolong
  * @Date: 2020-09-03 18:07:42
  * @LastEditors: xiaohuolong
- * @LastEditTime: 2020-11-09 15:28:46
+ * @LastEditTime: 2020-11-12 14:29:01
  * @FilePath: /ts.demo/generics.ts
  */
 // T表示泛型，具体什么类型是调用这个方法的时候决定的
@@ -124,3 +124,35 @@ let myGenericString = new Generic<string>('0', (x, y) => x + y);
 console.log(myGenericNumber.add(1,2))
 console.log(myGenericString.add('1','2'))
 
+interface PullDownRefreshConfig {
+    threshold: number;
+    stop: number;
+}
+// 所有参数可选
+type PullDownRefreshConfigOptions = Partial<PullDownRefreshConfig>
+
+let obj:PullDownRefreshConfig = {
+    threshold: 1,
+    stop: 2
+}
+
+let options:PullDownRefreshConfigOptions = {
+    threshold: 1,
+}
+
+interface Con {
+    threshold?: number;
+    stop: number;
+}
+// 所选参数必须
+type ConReq = Required<Con>
+
+let con:Con = {
+    // threshold: 1,
+    stop: 2
+}
+
+let cons:ConReq = {
+    threshold: 1,
+    stop: 2
+}
