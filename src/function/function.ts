@@ -2,18 +2,67 @@
  * @Author: xiaohuolong
  * @Date: 2020-09-03 15:16:50
  * @LastEditors: xiaohuolong
- * @LastEditTime: 2020-09-03 15:18:23
- * @FilePath: /ts.demo/function.ts
+ * @LastEditTime: 2020-11-14 23:20:02
+ * @FilePath: /ts.demo/src/function/function.ts
  */
 /** 
  * 函数声明
  * 1. 函数声明
  * 2. 函数表达式
- * 参数选项
- * 1. 可选参数 ?
- * 2. 参数默认值 =
- * 3. 剩余参数 ...
 */
+function add1(x: number, y: number): number{
+    return x + y
+}
+const add2 = function (x: number, y: number): number{
+    return x + y
+}
+console.log(add1(1, 2) === add2(1, 2))
+
+// 函数类型
+let add3: (x: number, y: number) => number;
+
+function add4(x: number, y: number): number {
+    return x + y;
+}
+
+add3 = add4
+console.log(add3(1, 2) === add4(1, 2))
+
+/**
+* 参数选项
+* 1. 可选参数 ?
+* 2. 参数默认值 =
+* 3. 剩余参数 ...
+*/
+function add5(a: number, b: number, c?: number){
+    return (a + b) + (c ? c : 0)
+}
+console.log(add5(1, 2, 3) === add5(3, 3))
+
+function add6(a: number, b: number, c: number = 0){
+    return a + b + c
+}
+console.log(add6(1, 2, 3) === add6(3, 3))
+
+function add7(...args: number[]): number{
+    return args.reduce((prev, current) => prev + current, 0)
+}
+console.log(add7(1, 2, 3) === add7(3, 3))
+
+// 函数重载
+type Com = string | number
+function add8(x: number, y: number): number
+function add8(x: string, y: string): string
+function add8(x: number, y: string): string
+function add8(x: string, y: number): string
+function add8(x: Com, y: Com): Com{
+    if(typeof x === "string" || typeof y === "string"){
+        return x.toString() + y.toString()
+    }
+    return x + y
+}
+console.log(add8(1, 2), add8('1', 2), add8(1, '2'), add8('1', '2'))
+
 function sum(x: number, y: number): number{
     return x + y
 } 
@@ -31,11 +80,11 @@ console.log(say())
 let push: (array: number[], ...item: number[]) => number[] = (arr, ...items) => items.map(item => arr.push(item))
 console.log(push([], 1, 2, 4, 3))
 
-// 重载 重载允许一个函数接受不同数量或类型的参数时，作出不同的处理。
+// 重载 
 function reverse(x: number): number | string 
 function reverse(x: string): number | string 
 function reverse(x:any): number | string {
-    if (!(<string>x).length) {
+    if (!<string>(x).length) {
         return Number(x.toString().split('').reverse().join(''));
     }else {
         return x.split('').reverse().join('');
