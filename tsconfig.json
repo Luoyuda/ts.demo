@@ -1,5 +1,5 @@
 {
-  "include":["static.type.ts"],
+  "include":["*"],
   "compilerOptions": {
     /* Basic Options */
     // "incremental": true,                   /* Enable incremental compilation */
