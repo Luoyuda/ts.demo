@@ -2,8 +2,8 @@
  * @Author: xiaohuolong
  * @Date: 2020-09-03 15:16:10
  * @LastEditors: xiaohuolong
- * @LastEditTime: 2020-11-14 11:16:48
- * @FilePath: /ts.demo/src/array/array.type.ts
+ * @LastEditTime: 2020-11-14 11:31:41
+ * @FilePath: /ts.demo/src/array.object/array.object.type.ts
  */
 
 /** 
@@ -36,3 +36,31 @@ let tuple: [string , number | string]
 // 需要类型对应，否则会报错
 tuple = ['1', 1]
 tuple = ['1', "1"]
+
+/**
+ * 对象类型
+ */
+interface Option {
+    a: number
+}
+// 需要按照接口定义的参数声明
+const b: Option = {
+    a: 1
+}
+/**
+ * {} 类型描述了一个没有成员的对象。
+ * 当你试图访问这样一个对象的任意属性时，会报错
+*/
+const c = {}
+/**
+ * type 泛型
+ */
+type Config<T> = {
+    b: T
+}
+const conf: Config<number> = {
+    b: 1
+}
+const conf2: Config<string> = {
+    b: "1"
+}

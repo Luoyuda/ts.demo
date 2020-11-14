@@ -2,10 +2,10 @@
  * @Author: xiaohuolong
  * @Date: 2020-11-14 11:05:32
  * @LastEditors: xiaohuolong
- * @LastEditTime: 2020-11-14 11:17:35
- * @FilePath: /ts.demo/src/array/README.md
+ * @LastEditTime: 2020-11-14 11:35:22
+ * @FilePath: /ts.demo/src/array.object/README.md
 -->
-# 数组
+# 数组和对象
 
 ## 数组类型
 
@@ -56,4 +56,51 @@ tuple = ['1', "1"]
 let tuple;
 tuple = ['1', 1];
 tuple = ['1', "1"];
+```
+
+## 对象
+
+可以通过指定类型去声明对象
+
+```ts
+// 需要按照接口定义的参数声明
+interface Option {
+    a: number
+}
+const b: Option = {
+    a: 1
+}
+/**
+ * {} 类型描述了一个没有成员的对象。
+ * 当你试图访问这样一个对象的任意属性时，会报错
+*/
+const c = {}
+/**
+ * type 泛型
+ */
+type Config<T> = {
+    b: T
+}
+const conf: Config<number> = {
+    b: 1
+}
+const conf2: Config<string> = {
+    b: "1"
+}
+```
+```js
+const b = {
+    a: 1
+};
+/**
+ * {} 类型描述了一个没有成员的对象。
+ * 当你试图访问这样一个对象的任意属性时，会报错
+*/
+const c = {};
+const conf = {
+    b: 1
+};
+const conf2 = {
+    b: "1"
+};
 ```
