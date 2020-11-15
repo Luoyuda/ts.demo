@@ -1,20 +1,25 @@
-/*
- * @Author: xiaohuolong
- * @Date: 2020-09-03 18:07:42
- * @LastEditors: xiaohuolong
- * @LastEditTime: 2020-11-12 14:29:01
- * @FilePath: /ts.demo/generics.ts
- */
-// T表示泛型，具体什么类型是调用这个方法的时候决定的
-// 表示参数是什么类型就返回什么类型
+# 泛型
+
+泛型（Generics）是允许同一个函数接受不同类型参数的一种模板。相比于使用 any 类型，使用泛型来创建可复用的组件要更好，因为泛型会保留参数类型。
+
+```ts
+// T 代表 Type，在定义泛型时通常用作第一个类型变量名称。 
 function id<T>(arg: T): T {
     return arg;
 }
 console.log(id<number>(123))
 console.log(id<string>('123'))
-console.log(id(123))
-console.log(id('123'))
+console.log(id(123)) // 类型推断为 number
+console.log(id('123')) // 类型推断为 string
+```
 
+常用泛型变量
+* K（Key）：表示对象中的键类型；
+* V（Value）：表示对象中的值类型；
+* E（Element）：表示元素类型。
+
+
+```ts
 const ids = <T, U>(arg: T, arg2: U): [U, T] => {
     return [arg2, arg]
 }
@@ -31,29 +36,26 @@ console.log(ids<number[], number[]>([123], [2]))
 console.log(ids<number[], string[]>([123], ['2']))
 console.log(ids<O, O>({a:1}, {a:2}))
 console.log(ids<F<number>, F<string>>({a:1}, {a:'2'}))
+```
 
-type Log = <T>(value: T) => T;
+## 泛型接口
+
+```ts
+interface Log {
+    <T>(value: T): T
+}
 // 等同于
-// interface Log {
-//     <T>(value: T): T
-// }
+// type Log = <T>(value: T) => T;
 const log:Log = (str) => {
     return str
 }
 console.log(log('log: 123'))
 console.log(log(123423))
+```
 
-type Log2<T> = (value: T) => T;
-// 等同于
-// interface Log2<T> {
-//     (value: T):T
-// }
-const log2:Log2<string> = (str) => {
-    return `log2: ${str}`
-}
-console.log(log2('123'))
+## 泛型类
 
-// 泛型类
+```ts
 class Log3<T>{
     run(value: T){
         return value
@@ -64,56 +66,19 @@ console.log(new Log3<string>().run('123'))
 const log3 = new Log3()
 console.log(log3.run(123))
 console.log(log3.run('123'))
+```
 
-// 类型约束
-interface Length {
-    length: number
-}
-function logLength<T extends Length>(value: T){
-    return value.length
-}
-console.log(logLength({ length: 2 })) // 2
-console.log(logLength([])) // 0
-console.log(logLength('1')) // 1
+## 泛型工具类型
 
-// 对象属性约束
-// 泛型约束对象中的属性
-function getProp<T,K extends keyof T>(obj:T,key: K) {
-    return obj[key]
-}
+1. `typeof`：获取一个变量声明或对象的类型
+2. `keyof`：取某种类型的所有键，其返回类型是联合类型
+3. `in`：遍历枚举类型
+4. `infer`：在条件类型语句中，可以用 infer 声明一个类型变量并且对它进行使用
+5. `extends`：继承
+6. `Partial`：配置成可选项
+7. `Required`：配置成必须
 
-console.log(getProp({a:1}, 'a'))
-console.log(getProp([1], 0))
-console.log(getProp('abc', 0))
-
-type P<T> = R<T>;
-type R<T = {}> = {
-    name: T;
-};
-
-const a: R<string> = { name: '123' } // ok
-const b: P<number> = { name: 1 } // ok
-const c: P<[string, number]> = { name: ['1', 2] } // ok
-console.log(a)
-console.log(b)
-console.log(c)
-
-
-class Generic<T> {
-    zeroValue: T;
-    add: (x: T, y: T) => T;
-    constructor(zeroValue: T, add: (x: T, y: T) => T){
-        this.zeroValue = zeroValue
-        this.add = add
-    }
-}
-
-let myGenericNumber = new Generic<number>(0, (x, y) => x + y);
-let myGenericString = new Generic<string>('0', (x, y) => x + y);
-
-console.log(myGenericNumber.add(1,2))
-console.log(myGenericString.add('1','2'))
-
+```ts
 // typeof
 interface Option1 {
     a: number;
@@ -203,3 +168,4 @@ let cons:ConReq = {
     threshold: 1,
     stop: 2
 }
+```
