@@ -1,5 +1,5 @@
 {
-  "include":["*", "src/array.object/array.type.ts", "src/interface/interface.ts", "src/function/function.ts"],
+  "include":["*", "src/array.object/array.type.ts", "src/interface/interface.ts", "src/function/function.ts", "src/pattern/pattern.ts", "src/generics/generics.ts", "src/array.object/class.ts", "src/generics/decorator.ts"],
   "compilerOptions": {
     /* Basic Options */
     // "incremental": true,                   /* Enable incremental compilation */
