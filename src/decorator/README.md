@@ -1,10 +1,15 @@
-/*
- * @Author: xiaohuolong
- * @Date: 2020-09-04 14:48:20
- * @LastEditors: xiaohuolong
- * @LastEditTime: 2020-11-15 17:58:20
- * @FilePath: /ts.demo/src/decorator/decorator.ts
- */
+# 装饰器
+
+* 它是一个表达式
+* 该表达式被执行后，返回一个函数
+* 函数的入参分别为 target、name 和 descriptor
+* 执行该函数后，可能返回 descriptor 对象，用于配置 target 对象
+
+## 类装饰器
+
+类装饰器是指接受一个类构造函数作为参数的函数，并且返回 `undefined` 、参数中提供的构造函数或一个新的构造函数。返回 `undefined` 等同于返回参数中的构造函数
+
+```ts
 /**
  * 类装饰器
  * 是一个表达式，返回一个函数
@@ -16,7 +21,7 @@ function classDecorator<T extends { new (...args:any[]): {} }>(constructor:T) {
         newProperty = "new property"
         greeting = "override"
         say(){
-            console.log(this.newProperty, this.greeting)
+            console.log(123)
         }
     }
 }
@@ -27,7 +32,14 @@ class P {
     }
 }
 const p = new P()
-p.say()
+p.say() // new property override
+```
+
+## 方法装饰器
+
+方法装饰器是一个接受三个参数的函数：包含这个属性的对象、属性名和一个可选参数。返回 `undefined`、参数提供的属性描述对象或一个新的属性描述对象。返回 `undefined` 等同于返回参数提供的属性描述对象
+
+```ts
 /**
  * 方法装饰器
  * @param target 构造函数
@@ -63,7 +75,36 @@ class R {
 }
 const r = new R()
 r.add(1, 2) // log : 1, 2  3
-// r.add = () => {} // 报错 Cannot assign to read only property
+r.add = () => {} // 报错 Cannot assign to read only property
+```
+
+## 属性装饰器
+
+属性装饰器接受两个参数的函数，包括这个属性的对象和这个属性的属性名，不会返回一个属性描述对象
+
+```ts
+/**
+ * 属性装饰器
+ * @param target 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
+ * @param propertyName 成员的名字。
+ */
+function defaultValue(value: string) {
+    return function (target: any, propertyName: string) {
+        console.log(propertyName)
+        target[propertyName] = value;
+    }
+}
+class T {
+    @defaultValue('default') propName!: string;
+}
+const t = new T();
+console.log(t.propName)
+```
+## 参数装饰器
+
+参数装饰器是一个接受三个参数的函数，一个包含了被装饰参数的方法的对象、方法的名字和参数在参数列表中的索引，返回值会被直接忽略
+
+```ts
 /**
  * 
  * @param value 方法参数装饰器
@@ -105,58 +146,15 @@ class Y {
 }
 const y = new Y()
 console.log(y.say('1', '2'))
-// console.log(y.say('1')) // 报错： 必须参数未输入
+console.log(y.say('1')) // 报错： 必须参数未输入
 console.log(Param)
-/**
- * 属性装饰器
- * @param target 对于静态成员来说是类的构造函数，对于实例成员是类的原型对象。
- * @param propertyName 成员的名字。
- */
-function defaultValue(value: string) {
-    return function (target: any, propertyName: string) {
-        console.log(propertyName)
-        target[propertyName] = value;
-    }
-}
-class T {
-    @defaultValue('default') propName!: string;
-}
-const t = new T();
-console.log(t.propName)
+```
 
-@classDecorator
-class Greeter {
-    @defaultValue('default') propName!: string;
-    greeting: string;
-    constructor(message: string) {
-        this.greeting = message;
-    }
-    @validate
-    hi(@required message: string, @required msg?: string){
-        return message + msg
-    }
-    @readonly(false)
-    greet() {
-        return "Hello, " + this.greeting;
-    }
-    @readonly(true)
-    @log
-    print(...args:any[]) {
-        return `print: ${args.join(',')}`
-    }
-}
+## 装饰器工厂
 
-const greeter = new Greeter('123')
-console.log(greeter.greet())
-console.log(greeter.print(1, 2, '3', true))
-console.log(greeter.propName)
-greeter.propName = '123'
-console.log(greeter.propName)
-console.log(greeter.hi('321','123'))
-console.log(Param)
+装饰器工厂是一个接受任意数量参数的函数，必须返回上述任何一种装饰器
 
-console.log('装饰器工厂')
-// 方法装饰器
+```ts
 function logMethod(target:any, key:any, descriptor:any) {
     const fn = descriptor.value
     descriptor.value = function(...args:any[]){
@@ -225,3 +223,4 @@ console.log(u)
 console.log(u.say('hh'))
 u.a = '1'
 console.log(u.a)
+```
