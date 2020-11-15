@@ -2,8 +2,8 @@
  * @Author: xiaohuolong
  * @Date: 2020-09-03 18:07:42
  * @LastEditors: xiaohuolong
- * @LastEditTime: 2020-11-12 14:29:01
- * @FilePath: /ts.demo/generics.ts
+ * @LastEditTime: 2020-11-15 15:45:58
+ * @FilePath: /ts.demo/src/generics/generics.ts
  */
 // T表示泛型，具体什么类型是调用这个方法的时候决定的
 // 表示参数是什么类型就返回什么类型
@@ -203,3 +203,27 @@ let cons:ConReq = {
     threshold: 1,
     stop: 2
 }
+
+const obj1 = {
+    a: 1,
+    b: 2,
+    c: 3
+}
+function getValues<T, K extends keyof T>(obj: T, keys: K[]): T[K][]{
+    return keys.map(key => obj[key])
+}
+
+console.log(getValues(obj1, ['a', 'b']))
+console.log(getValues(obj1, ['c', 'b']))
+// console.log(getValues(obj1, ['e', 'b']))
+
+interface Obj {
+    a: string
+    b: number
+}
+type PickObj = Readonly<Pick<Obj, 'a'>>
+
+type Diff<T, U> = T extends U ? never : T
+type T1 = Diff<'a' | 'b' | 'c', 'a' | 'e'>
+type NotNull<T> = Diff<T, undefined | null>
+type T5 = NotNull<string | number | undefined>
